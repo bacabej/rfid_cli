@@ -24,42 +24,41 @@ public class ScemtecReader {
 	public ArrayList<String> getTags() {
 		ArrayList<String> tags = new ArrayList<>();
 
-		// Inventory erstellen
-		send("6C20s"); // Response length: 14 byte
-		System.out.println("Response HEX: " + read(14));
-
-		// Inventory lesen (Alle TAG Ids) // Response with 1 TAG ID: 28 byte, e.g:
-		// <ACK><STX>6C210001563FC34C000104E0<ETX>q
-		// <ACK><STX> 6C21 0001 563FC34C000104E0 <ETX> q
-		// ACK STX CMD #COUNT DSFID-Byte-TAG-ID ETX CHECKSUM
-		// ID = 16 byte (64bit)
-		send("6C21");
-
-		// read first 10 byte to know how much data is sent to us
-		// answer looks like: <ACK><STX>6C210001
-		String data = read(10);
-
-		// 17th byte is our number we need (this is the number which indicates how many
-		// tags were found)
-		char cCount = data.charAt(17);
-
-		int iCount = Integer.valueOf(cCount);
-
-		System.out.println("Number of tags found: " + iCount);
-
-		// int offset = 18;
-
-		// read all tag ids
-		for (int i = 0; i < iCount; i++) {
-			// read first found tag
-			data = read(16);
-			// String tag = data.substring(offset, offset + 16);
-			tags.add(data);
-			// offset += offset + 16;
-		}
-
+		// JUST FOR TESTING, THIS WILL SIMULATE TAGS IN THE ANTENNA
+		tags.add("0x001");
+		tags.add("0x002");
+		tags.add("0x001");
+		tags.add("0x001");
+		tags.add("0x003");
 		return tags;
-
+		// END TESTING
+		/*
+		 * // Inventory erstellen send("6C20s"); // Response length: 14 byte
+		 * System.out.println("Response HEX: " + read(14));
+		 * 
+		 * // Inventory lesen (Alle TAG Ids) // Response with 1 TAG ID: 28 byte, e.g: //
+		 * <ACK><STX>6C210001563FC34C000104E0<ETX>q // <ACK><STX> 6C21 0001
+		 * 563FC34C000104E0 <ETX> q // ACK STX CMD #COUNT DSFID-Byte-TAG-ID ETX CHECKSUM
+		 * // ID = 16 byte (64bit) send("6C21");
+		 * 
+		 * // read first 10 byte to know how much data is sent to us // answer looks
+		 * like: <ACK><STX>6C210001 String data = read(10);
+		 * 
+		 * // 17th byte is our number we need (this is the number which indicates how
+		 * many // tags were found) char cCount = data.charAt(17);
+		 * 
+		 * int iCount = Integer.valueOf(cCount);
+		 * 
+		 * System.out.println("Number of tags found: " + iCount);
+		 * 
+		 * // int offset = 18;
+		 * 
+		 * // read all tag ids for (int i = 0; i < iCount; i++) { // read first found
+		 * tag data = read(16); // String tag = data.substring(offset, offset + 16);
+		 * tags.add(data); // offset += offset + 16; }
+		 * 
+		 * return tags;
+		 */
 	}
 
 	/**
