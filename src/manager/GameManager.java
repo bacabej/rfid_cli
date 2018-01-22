@@ -9,22 +9,41 @@ import device.ScemtecReader;
 import entities.Player;
 import http.WebServer;
 
+/**
+ * 
+ * @author Sebastian Düringer, Hamza Ammar
+ * @version 0.1
+ * 
+ *          The class GameManager implements the game logic
+ */
 public class GameManager {
 
+	// for communicating with the scemtec reader
 	private ScemtecReader sr;
+
+	// to create a http server
 	private WebServer ws;
 
+	// number of balls each player will have
 	private int ballCount = 0;
+
+	// number of players
 	private int playerCount = 0;
 	private ArrayList<Player> players;
 	private int STATE = 1;
 
+	private long ticksPerSecond = 0;
+
+	// constructor
 	public GameManager() {
 		System.out.println("GameManager initialized");
 		sr = new ScemtecReader();
-		ws = new WebServer(this);
-		ws.startServer();
+		// create a http server using port 80
+		ws = new WebServer(this, 80);
 		players = new ArrayList<>();
+
+		// starting the webserver
+		ws.startServer();
 
 	}
 
@@ -36,6 +55,15 @@ public class GameManager {
 		return this.ballCount;
 	}
 
+	// the main game loop. The logic is implemented using a finite state machine The
+	// states are:
+	// 1: enter number of players
+	// 2: enter name of players
+	// 3: enter ball count
+	// 4: print additional information
+	// 5: register balls for all players
+	// 6: check for new target hits (the actual game starts here)
+	// 7: finishing the game
 	public void tick() throws InterruptedException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		switch (STATE) {
@@ -127,6 +155,10 @@ public class GameManager {
 			}
 			break;
 
+		// finishing the game
+		case 7:
+			System.out.println("ENDING");
+			break;
 		}
 	}
 
@@ -135,16 +167,30 @@ public class GameManager {
 		System.out.println("-------------------------------------");
 	}
 
-	// loop
+	// starting the game loop
 	public void run() {
 		printStart();
+		long ticks = 0;
+		long start = System.currentTimeMillis();
 		while (true) {
 			try {
 				tick();
+				ticks++;
+				long delta = System.currentTimeMillis() - start;
+				// 1 second elapsed
+				if (delta > 1000) {
+					start = System.currentTimeMillis();
+					ticksPerSecond = ticks;
+					ticks = 0;
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public long getTicksPerSecond() {
+		return ticksPerSecond;
 	}
 
 }

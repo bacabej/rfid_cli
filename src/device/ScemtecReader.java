@@ -4,6 +4,14 @@ import java.util.ArrayList;
 
 import com.fazecast.jSerialComm.SerialPort;
 
+/**
+ * 
+ * @author Sebastian Düringer, Hamza Ammar
+ * @version 0.1
+ * 
+ *          The class ScemtecReader offers an API to communicate with a
+ *          ScemtecReader
+ */
 public class ScemtecReader {
 
 	byte STX = 0x2;

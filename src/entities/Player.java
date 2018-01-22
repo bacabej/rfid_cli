@@ -2,6 +2,14 @@ package entities;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author Sebastian Düringer, Hamza Ammar
+ * @version 0.1
+ * 
+ *          The class Player stores information about a player like name, score
+ *          and a list of all tags registered to this player
+ */
 public class Player {
 
 	private String name;
